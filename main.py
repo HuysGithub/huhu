@@ -75,21 +75,23 @@ def onclick_addStudent():
 def onclick_showStudent():
 	sub = tk.Toplevel()
 	sub.title("Student Information")
+	
 	table_label = Label(sub)
 	id_label = Label(table_label)
 	id_txt = Label(id_label, text="ID")
 	id_txt.pack()
-	for student in Student.student_list:
-		stid_label = Label(id_label, text=student.id)
-		stid_label.pack()
-	id_label.grid(row=0,column=0)
 
 	name_label = Label(table_label)
 	name_txt = Label(name_label, text="Name")
 	name_txt.pack()
+
 	for student in Student.student_list:
+		stid_label = Label(id_label, text=student.id)
+		stid_label.pack()
 		stname_label = Label(name_label, text=student.name)
 		stname_label.pack()
+
+	id_label.grid(row=0,column=0)
 	name_label.grid(row=0,column=1)
 
 	table_label.pack()
@@ -97,14 +99,16 @@ def onclick_showStudent():
 # chay ham main
 if __name__ == "__main__":
 	decompress()
+	# multiprocessing
 	p = Process(target=load_student())
 	p.start()
 	p.join()
 
 	window = tk.Tk()
+	window.title("Student management")
 	window.geometry("300x300")
 
-	window.title("Hospital management")
+	
 	student_label = Label(window)
 	button_addStudent = Button(student_label, text="ADD STUDENT", command=lambda: onclick_addStudent())
 	button_addStudent.grid(row=0, column=0)
