@@ -1,22 +1,26 @@
 import os
 from multiprocessing import Process
 import tkinter as tk
-from tkinter import Label, Entry
+from tkinter import Label, Entry, Button
 import zipfile
 
 from student import Student
 from course import Course
 
+# Nen file
 def compress():
 	with zipfile.ZipFile("student.dat", "a", compression=zipfile.ZIP_LZMA) as zipf:
 		zipf.write("students.txt")
 	os.remove("students.txt")
+
+# Giai Nen
 def decompress():
 	if os.path.exists("student.dat") and zipfile.is_zipfile("student.dat"):
 		with zipfile.ZipFile("student.dat") as zipf:
 			zipf.extractall()
 		os.remove("student.dat")
 
+# Lay Thong tin tu file txt
 def load_student():
 	if os.path.exists("students.txt"):
 		with open("students.txt","r") as reader:
@@ -28,11 +32,13 @@ def load_student():
 				student = Student(path[0], path[1], path[2], path[3], mark)
 				Student.student_list.append(student)
 
+# Save vao file txt
 def save_student():
 	with open("students.txt", "w") as writer:
 		for student in Student.student_list:
 			writer.write(student.toString() + "\n")
 
+# xu ly sukien khi bam nut them hoc sinh
 def onclick_addStudent():
 	sub = tk.Toplevel(window)
 	sub.title("ADD STUDENT")
@@ -50,9 +56,9 @@ def onclick_addStudent():
 	dob_label.pack()
 	dob_entry = Entry(sub)
 	dob_entry.pack()
-	button_OK = tk.Button(sub,text="OK", command=lambda:on_click_OK())
+	button_OK = Button(sub,text="OK", command=lambda:on_click_OK())
 	button_OK.pack()
-	button_exit = tk.Button(sub, text="Exit", command=sub.destroy)
+	button_exit = Button(sub, text="Exit", command=sub.destroy)
 	button_exit.pack()
 	notice = Label(sub, text="")
 	notice.pack()
@@ -65,6 +71,7 @@ def onclick_addStudent():
 		notice_detail = student.add_to_list()
 		notice.config(text=notice_detail)
 
+# xu ly sukien khi bam nut show hoc sinh
 def onclick_showStudent():
 	sub = tk.Toplevel()
 	sub.title("Student Information")
@@ -87,6 +94,7 @@ def onclick_showStudent():
 
 	table_label.pack()
 
+# chay ham main
 if __name__ == "__main__":
 	decompress()
 	p = Process(target=load_student())
@@ -98,20 +106,11 @@ if __name__ == "__main__":
 
 	window.title("Hospital management")
 	student_label = Label(window)
-	button_addStudent = tk.Button(student_label, text="ADD STUDENT", command=lambda: onclick_addStudent())
+	button_addStudent = Button(student_label, text="ADD STUDENT", command=lambda: onclick_addStudent())
 	button_addStudent.grid(row=0, column=0)
-	button_showStudent = tk.Button(student_label, text="SHOW STUDENT", command=lambda: onclick_showStudent())
+	button_showStudent = Button(student_label, text="SHOW STUDENT", command=lambda: onclick_showStudent())
 	button_showStudent.grid(row=0, column=1)
 	student_label.pack()
-	# id = input("ID: ")
-	# name = input("Name: ")
-	# dob = input("DoB: ")
-	# student = Student(id,name,dob)
-	# student.add_to_list()
-
-	# for student in Student.student_list:
-	# 	print(student)
-	
 	window.mainloop()
 	save_student()
 	compress()
